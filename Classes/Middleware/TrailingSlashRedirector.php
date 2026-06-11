@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace B13\DeSlash\Middleware;
 
+use B13\DeSlash\Event\TrailingSlashRedirectorEvent;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -26,8 +28,15 @@ use TYPO3\CMS\Core\Site\Entity\Site;
  */
 class TrailingSlashRedirector implements MiddlewareInterface
 {
+    public function __construct(private readonly EventDispatcherInterface $eventDispatcher) {}
+
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
+        $trailingSlashRedirectorEvent = new TrailingSlashRedirectorEvent($request);
+        $this->eventDispatcher->dispatch($trailingSlashRedirectorEvent);
+        if ($trailingSlashRedirectorEvent->skipRedirect === true) {
+            return $handler->handle($request);
+        }
         $site = $request->getAttribute('site');
 
         if ($request->getMethod() !== 'GET' && $request->getMethod() !== 'HEAD') {
