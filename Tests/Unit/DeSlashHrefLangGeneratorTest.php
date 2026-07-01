@@ -27,7 +27,7 @@ class DeSlashHrefLangGeneratorTest extends TestCase
             'de-DE' => 'https://example.com/de',
         ];
 
-        $event = new ModifyHrefLangTagsEvent($this->createStub(ServerRequestInterface::class));
+        $event = new ModifyHrefLangTagsEvent(self::createStub(ServerRequestInterface::class));
         $event->setHrefLangs($hrefLangs);
 
         $uriCleaner = $this->createMock(UriCleaner::class);

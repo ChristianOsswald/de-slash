@@ -28,7 +28,7 @@ class DeSlashingPageLinkBuilderTest extends TestCase
         $linkResult->method('getUrl')->willReturn('/en/');
         $linkResult->method('getType')->willReturn(LinkService::TYPE_PAGE);
 
-        $modifiedLinkResult = $this->createStub(LinkResultInterface::class);
+        $modifiedLinkResult = self::createStub(LinkResultInterface::class);
         $linkResult->expects(self::once())
             ->method('withAttribute')
             ->with('href', '/en')
@@ -36,7 +36,7 @@ class DeSlashingPageLinkBuilderTest extends TestCase
 
         $event = new AfterLinkIsGeneratedEvent(
             $linkResult,
-            $this->createStub(ContentObjectRenderer::class),
+            self::createStub(ContentObjectRenderer::class),
             []
         );
 
@@ -54,12 +54,12 @@ class DeSlashingPageLinkBuilderTest extends TestCase
 
     public function testInvokeDoesNothingForHomepageRoot(): void
     {
-        $linkResult = $this->createStub(LinkResultInterface::class);
+        $linkResult = self::createStub(LinkResultInterface::class);
         $linkResult->method('getUrl')->willReturn('/');
 
         $event = new AfterLinkIsGeneratedEvent(
             $linkResult,
-            $this->createStub(ContentObjectRenderer::class),
+            self::createStub(ContentObjectRenderer::class),
             []
         );
 
@@ -75,13 +75,13 @@ class DeSlashingPageLinkBuilderTest extends TestCase
 
     public function testInvokeDoesNothingForNonPageLinks(): void
     {
-        $linkResult = $this->createStub(LinkResultInterface::class);
+        $linkResult = self::createStub(LinkResultInterface::class);
         $linkResult->method('getUrl')->willReturn('/some-file.pdf');
         $linkResult->method('getType')->willReturn('file');
 
         $event = new AfterLinkIsGeneratedEvent(
             $linkResult,
-            $this->createStub(ContentObjectRenderer::class),
+            self::createStub(ContentObjectRenderer::class),
             []
         );
 

@@ -24,7 +24,7 @@ class DeSlashCanonicalUrlTest extends TestCase
     public function testInvokeCleansUrlWhenTrailingSlashIsPresent(): void
     {
         $event = new ModifyUrlForCanonicalTagEvent(
-            $this->createStub(ServerRequestInterface::class),
+            self::createStub(ServerRequestInterface::class),
             new Page([]),
             'https://example.com/en/',
             null
@@ -45,7 +45,7 @@ class DeSlashCanonicalUrlTest extends TestCase
     public function testInvokeDoesNotSetUrlWhenNoTrailingSlash(): void
     {
         $event = new ModifyUrlForCanonicalTagEvent(
-            $this->createStub(ServerRequestInterface::class),
+            self::createStub(ServerRequestInterface::class),
             new Page([]),
             'https://example.com/en',
             null

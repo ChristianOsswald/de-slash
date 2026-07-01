@@ -14,14 +14,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        TYPO3: [ '13.4', '14.0' ]
+        TYPO3: [ '13.4', '14.3' ]
         PHP: [ '8.2', '8.3', '8.4', '8.5' ]
-      exclude:
-        - TYPO3: '14.0'
-          PHP: '8.2'
+        exclude:
+          - TYPO3: '14.3'
+            PHP: '8.2'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up PHP Version ${{ matrix.PHP }}
         uses: shivammathur/setup-php@v2
@@ -36,7 +36,7 @@ jobs:
         run: composer validate
 
       - name: Cache dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.composer/cache
           key: dependencies-composer-${{ hashFiles('composer.json') }}
