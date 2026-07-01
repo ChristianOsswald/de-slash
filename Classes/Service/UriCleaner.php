@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace B13\DeSlash\Service;
 
+use TYPO3\CMS\Core\Http\Uri;
+
 class UriCleaner
 {
     /**
@@ -24,32 +26,19 @@ class UriCleaner
             return $url;
         }
 
-        $parts = parse_url($url);
-        if (empty($parts['path']) || trim($parts['path'], '/') === '' || !str_ends_with($parts['path'], '/')) {
+        try {
+            $uri = new Uri($url);
+        } catch (\InvalidArgumentException $e) {
+            // Malformed URL according to PSR-7 (e.g. '///'), return as is
             return $url;
         }
 
-        $newPath = rtrim($parts['path'], '/');
-        $newUrl = isset($parts['scheme']) ? $parts['scheme'] . '://' : (str_starts_with($url, '//') ? '//' : '');
-        if (isset($parts['user'])) {
-            $newUrl .= $parts['user'];
-            if (isset($parts['pass'])) {
-                $newUrl .= ':' . $parts['pass'];
-            }
-            $newUrl .= '@';
-        }
-        $newUrl .= $parts['host'] ?? '';
-        if (isset($parts['port'])) {
-            $newUrl .= ':' . $parts['port'];
-        }
-        $newUrl .= $newPath;
-        if (isset($parts['query'])) {
-            $newUrl .= '?' . $parts['query'];
-        }
-        if (isset($parts['fragment'])) {
-            $newUrl .= '#' . $parts['fragment'];
+        $path = $uri->getPath();
+
+        if ($path === '' || trim($path, '/') === '' || !str_ends_with($path, '/')) {
+            return $url;
         }
 
-        return $newUrl;
+        return (string)$uri->withPath(rtrim($path, '/'));
     }
 }
