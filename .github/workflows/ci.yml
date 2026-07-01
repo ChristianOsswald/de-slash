@@ -1,15 +1,24 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron:  '56 5 * * *'
 
 jobs:
   testsuite:
 
-    runs-on: ubuntu-latest
+    name: all tests
+    runs-on: ubuntu-22.04
     strategy:
+      fail-fast: false
       matrix:
-        TYPO3: [ 12.4, 13.4]
-        PHP: [ 8.2, 8.3 ]
+        TYPO3: [ '13.4', '14.0' ]
+        PHP: [ '8.2', '8.3', '8.4', '8.5' ]
+      exclude:
+        - TYPO3: '14.0'
+          PHP: '8.2'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
